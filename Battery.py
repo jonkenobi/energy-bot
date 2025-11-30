@@ -1,4 +1,4 @@
-from Constants import BATTERY_CAPACITY_KWH, MAX_POWER_KW, EFFICIENCY
+from constants import BATTERY_CAPACITY_KWH, MAX_POWER_KW, EFFICIENCY
 
 class Battery:
     """Represents the battery unit and executes the charge/discharge logic."""

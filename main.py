@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from Battery import Battery
 
-from Constants import BATTERY_CAPACITY_KWH, MAX_POWER_KW, EFFICIENCY, PRICE_THRESHOLD
+from battery import Battery
+from constants import BATTERY_CAPACITY_KWH, MAX_POWER_KW, EFFICIENCY, PRICE_THRESHOLD
 
 # --- PHASE 1: GENERATE DATA (Mock 24-hour prices) ---
 hours = np.arange(24)

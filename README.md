@@ -35,3 +35,5 @@ This project simulates a basic energy arbitrage bot that charges a home battery 
 
 Energy arbitrage helps home and grid-scale batteries increase value by buying energy when cheap and selling when expensive. This project demonstrates the core logic simply and transparently.
 
+## Disclaimer
+Select portions of this code were generated or assisted by AI
