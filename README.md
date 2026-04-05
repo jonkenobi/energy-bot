@@ -50,14 +50,8 @@ The bot starts ticking immediately. The HTTP server runs concurrently on port 80
 ```
 Time            Price       Action    Battery     Profit        ADR
 ----------------------------------------------------------------------
-23:08:53     $ 0.3176         WAIT      0.00kWh $  0.0000     NORMAL
-23:08:54     $ 0.2895         WAIT      0.00kWh $  0.0000     NORMAL
-[Retry] Price fetch failed on attempt 1 — retrying in 0.6s
-[Retry] Price fetch failed on attempt 2 — retrying in 0.5s
-[Retry] Price fetch succeeded on attempt 3
-23:08:57     $ 0.2555         WAIT      0.00kWh $  0.0000     NORMAL
-[Retry] Price fetch failed on attempt 1 — retrying in 0.7s
-[Retry] Price fetch succeeded on attempt 2
+23:08:57     $ 0.3176         WAIT      0.00kWh $  0.0000     NORMAL
+23:08:58     $ 0.2895         WAIT      0.00kWh $  0.0000     NORMAL
 23:08:59     $ 0.1220       CHARGE      4.50kWh $ -0.6100     NORMAL
 23:09:00     $ 0.0703       CHARGE      9.00kWh $ -0.9615     NORMAL
 23:09:01     $ 0.0547       CHARGE     13.05kWh $ -1.2077     NORMAL
