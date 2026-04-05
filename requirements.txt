@@ -1,4 +1,6 @@
+## Versions not added yet.
+
 numpy
-pandas
-matplotlib
 pytest
+fastapi
+uvicorn
