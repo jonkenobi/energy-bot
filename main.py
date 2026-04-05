@@ -26,7 +26,8 @@ async def run_bot():
             time_str = datetime.now().strftime("%H:%M:%S")
             print(f"{time_str:<12} ${event.price:>7.4f} {'CHARGE (ADR)':>12} {engine.battery.current_charge:>9.2f}kWh ${engine.total_profit:>8.4f} {'SPECIAL':>10}")
             continue
-
+        
+        # Normal arbitrage logic
         decision = engine.evaluate(event.price)
         signal_label = signal.signal_level if signal else "NORMAL"
         time_str = decision.timestamp.strftime("%H:%M:%S")
