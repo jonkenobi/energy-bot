@@ -22,17 +22,17 @@ class RetryPolicy:
             try:
                 result = await func(*args, **kwargs)
                 if attempt > 0:
-                    print(f"[Retry] Succeeded on attempt {attempt + 1}")
+                    print(f"[Retry] Price fetch succeeded on attempt {attempt + 1}")
                 return result
             except Exception as e:
                 attempt += 1
                 if attempt >= self.max_attempts:
-                    print(f"[Retry] All {self.max_attempts} attempts failed — giving up")
+                    print(f"[Retry] All {self.max_attempts} price fetch attempts failed — giving up")
                     raise e
 
                 delay = min(self.base_delay * (2 ** attempt), self.max_delay)
                 if self.jitter:
                     delay = delay * (0.5 + random.random() * 0.5)
 
-                print(f"[Retry] Attempt {attempt} failed — retrying in {delay:.1f}s")
+                print(f"[Retry] Price fetch failed on attempt {attempt} — retrying in {delay:.1f}s")
                 await asyncio.sleep(delay)
