@@ -5,7 +5,7 @@ A real-time energy arbitrage bot that simulates a home battery system, making li
 ## How It Works
 
 - **Real-time price feed** — simulates a live electricity price stream, ticking every second
-- **Arbitrage engine** — decides whether to charge, discharge, or wait based on price thresholds
+- **Arbitrage engine** — decides whether to charge, discharge, or wait. Currently it makes the decision purely based on a fixed price threshold
 - **OpenADR signal handler** — HTTP endpoint that accepts demand-response signals from a grid operator, overriding the bot's normal logic
 - **Circuit breaker** — detects price feed failures and blocks requests until the service recovers, preventing cascading failures
 - **Retry policy** — retries transient failures with exponential backoff and jitter before escalating to the circuit breaker
@@ -112,7 +112,7 @@ This mirrors real-world energy system design where communication failures are ex
 Energy arbitrage helps home and grid-scale batteries increase value by buying energy when cheap and selling when expensive. 
 This project demonstrates the core logic simply and transparently. 
 
-I am building this energy arbitrage bot to get a feel for what arbitrage bots do and how the work, while learning the key concepts in the energy industry. 
+I am building this energy arbitrage bot to get a feel for what arbitrage bots do and how they work, while learning the key concepts in the energy industry. 
 
 
 ## Disclaimer
