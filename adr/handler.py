@@ -55,7 +55,7 @@ async def get_status():
         "reason": current_signal.reason
     }
 
-def get_current_signal() -> VenPayload | None:
+def get_current_adr_signal() -> VenPayload | None:
     global current_signal
     if current_signal is None:
         return None
