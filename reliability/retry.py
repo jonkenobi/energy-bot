@@ -1,6 +1,8 @@
 import asyncio
 import random
-from datetime import datetime
+import logging
+
+logger = logging.getLogger("reliability.retry")
 
 class RetryPolicy:
     def __init__(
@@ -22,17 +24,17 @@ class RetryPolicy:
             try:
                 result = await func(*args, **kwargs)
                 if attempt > 0:
-                    print(f"[Retry] Price fetch succeeded on attempt {attempt + 1}")
+                    logger.debug(f"Succeeded on attempt {attempt + 1}")
                 return result
             except Exception as e:
                 attempt += 1
                 if attempt >= self.max_attempts:
-                    print(f"[Retry] All {self.max_attempts} price fetch attempts failed — giving up")
+                    logger.error(f"All {self.max_attempts} attempts failed — giving up")
                     raise e
 
                 delay = min(self.base_delay * (2 ** attempt), self.max_delay)
                 if self.jitter:
                     delay = delay * (0.5 + random.random() * 0.5)
 
-                print(f"[Retry] Price fetch failed on attempt {attempt} — retrying in {delay:.1f}s")
+                logger.debug(f"Attempt {attempt} failed - retrying in {delay:.1f}s")
                 await asyncio.sleep(delay)

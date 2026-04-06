@@ -1,6 +1,9 @@
 import asyncio
+import logging
 from enum import Enum
 from datetime import datetime, timedelta
+
+logger = logging.getLogger("reliability.circuit_breaker")
 
 class CircuitState(Enum):
     CLOSED = "CLOSED"       # normal, requests go through
@@ -33,7 +36,7 @@ class CircuitBreaker:
         if self.state == CircuitState.HALF_OPEN:
             self.success_count += 1
             if self.success_count >= self.success_threshold:
-                print(f"[CircuitBreaker] Closed — service recovered")
+                logger.warning("Circuit CLOSED — service recovered")
                 self.state = CircuitState.CLOSED
                 self.failure_count = 0
                 self.success_count = 0
@@ -44,17 +47,17 @@ class CircuitBreaker:
         self.failure_count += 1
         self.last_failure_time = datetime.now()
         if self.failure_count >= self.failure_threshold:
-            print(f"[CircuitBreaker] OPEN — too many failures, blocking requests")
+            logger.warning("Circuit OPEN — too many failures, blocking requests")
             self.state = CircuitState.OPEN
             self.success_count = 0
 
     async def call(self, func, *args, **kwargs):
         if self.state == CircuitState.OPEN:
             if self._should_attempt_reset():
-                print(f"[CircuitBreaker] HALF_OPEN — testing recovery")
+                logger.warning("Circuit HALF_OPEN — testing recovery")
                 self.state = CircuitState.HALF_OPEN
             else:
-                raise Exception("[CircuitBreaker] Circuit is OPEN — request blocked")
+                raise Exception("Circuit is OPEN — request blocked")
 
         try:
             result = await func(*args, **kwargs)

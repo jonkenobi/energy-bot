@@ -1,10 +1,13 @@
 import asyncio
 import numpy as np
 import random
+import logging
 from dataclasses import dataclass
 from datetime import datetime
 from reliability.circuit_breaker import CircuitBreaker
 from reliability.retry import RetryPolicy
+
+logger = logging.getLogger("price_feed")
 
 @dataclass
 class PriceEvent:
@@ -33,7 +36,7 @@ async def simulate_price_feed():
             price = await breaker.call(retry.call, fetch_price, hour)
             yield PriceEvent(timestamp=now, price=price, hour=round(hour, 2))
         except Exception as e:
-            print(f"[PriceFeed] Skipping tick — {e}")
+            logger.warning(f"Skipping tick — {e}")
 
         await asyncio.sleep(1)
 

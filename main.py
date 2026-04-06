@@ -1,10 +1,14 @@
 import asyncio
+import logging
 import uvicorn
 from price_feed.simulator import simulate_price_feed
 from arbitrage.engine import ArbitrageEngine
 from adr.handler import app, get_current_signal
 from adr.models import SimpleLevel
 from datetime import datetime
+from config.log_config import setup_logging
+
+setup_logging() 
 
 async def run_bot():
     engine = ArbitrageEngine()
@@ -29,7 +33,7 @@ async def run_bot():
 
         # Normal arbitrage logic
         decision = engine.evaluate(event.price)
-        signal_label = f"MODERATE(1)" if signal and signal.signal_level == SimpleLevel.MODERATE else "NORMAL(0)"
+        signal_label = "MODERATE(1)" if signal and signal.signal_level == SimpleLevel.MODERATE else "NORMAL(0)"
         time_str = decision.timestamp.strftime("%H:%M:%S")
         print(f"{time_str:<12} ${decision.price:>7.4f} {decision.action:>12} {decision.battery_level:>9.2f}kWh ${decision.profit:>8.4f} {signal_label:>10}")
 

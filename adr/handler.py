@@ -4,6 +4,9 @@ from datetime import datetime
 from adr.models import VenPayload, SimpleLevel, JST
 import asyncio
 import uuid
+import logging
+
+logger = logging.getLogger("adr.handler")
 
 app = FastAPI()
 
@@ -31,7 +34,7 @@ async def receive_signal(request: SignalRequest):
             issued_at=now,
             reason=request.reason
         )
-        print(f"[ADR] Event received: {request.event_id} level={request.signal_level} duration={request.duration_seconds}s expires={current_signal.expires_at().strftime('%H:%M:%S %Z')}")
+    logger.info(f"Event received: {request.event_id} level={request.signal_level} duration={request.duration_seconds}s expires={current_signal.expires_at().strftime('%H:%M:%S %Z')}")
     return {
         "status": "accepted",
         "request_id": current_signal.request_id,
@@ -56,5 +59,6 @@ def get_current_signal() -> VenPayload | None:
     if current_signal is None:
         return None
     if not current_signal.is_active():
+        logger.debug(f"Event {current_signal.event_id} expired")
         return None
     return current_signal
