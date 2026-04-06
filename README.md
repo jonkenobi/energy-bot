@@ -15,28 +15,30 @@ A real-time energy arbitrage bot that simulates a home battery system, making li
 ```
 energy-bot/
 ├── main.py                  # entry point, runs bot and HTTP server concurrently
-├── battery.py               # battery model (SoC, charge/discharge logic)
-├── constants.py             # battery and pricing parameters
-│
-├── price_feed/
-│   └── simulator.py         # async price feed with simulated failures
-│
-├── arbitrage/
-│   └── engine.py            # threshold-based decision engine
-│
 ├── adr/
 │   ├── models.py            # OpenADR 2.0 VEN payload data classes
 │   └── handler.py           # FastAPI HTTP endpoint
 │
-├── reliability/
-│   ├── circuit_breaker.py   # CLOSED/OPEN/HALF_OPEN state machine
-│   └── retry.py             # exponential backoff with jitter
+├── arbitrage/
+│   └── engine.py            # threshold-based decision engine
+│
+├── battery/
+│   ├── actions.py           # BatteryAction enum (CHARGE, DISCHARGE, HOLD)
+│   ├── battery.py           # battery model (SoC, charge/discharge logic)
+│   └── constants.py         # battery and pricing parameters
 │
 ├── config/
 │   └── log_config.py        # logging setup
 │
 ├── logs/
 │   └── system_events.log    # infrastructure logs (circuit breaker, retry, ADR events)
+│
+├── price_feed/
+│   └── simulator.py         # async price feed with simulated failures
+│
+├── reliability/
+│   ├── circuit_breaker.py   # CLOSED/OPEN/HALF_OPEN state machine
+│   └── retry.py             # exponential backoff with jitter
 │
 └── tests/
     └── test_battery.py      # pytest test suite

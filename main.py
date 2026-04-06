@@ -5,6 +5,7 @@ from price_feed.simulator import simulate_price_feed
 from arbitrage.engine import ArbitrageEngine
 from adr.handler import app, get_current_adr_signal
 from adr.models import SimpleLevel, VenPayload
+from battery.actions import BatteryAction
 from datetime import datetime
 from config.log_config import setup_logging
 
@@ -40,12 +41,12 @@ def handle_adr(signal: VenPayload | None, engine: ArbitrageEngine, event) -> tup
     time_str = datetime.now().strftime("%H:%M:%S")
 
     if signal.signal_level == SimpleLevel.HIGH:
-        engine.battery.update(0, event.price)
+        engine.battery.update(BatteryAction.HOLD, event.price)
         print_decision(time_str, event.price, "WAIT (ADR)", engine.battery.current_charge, engine.total_profit, get_signal_label(signal))
         return True, 1.0
 
     if signal.signal_level == SimpleLevel.SPECIAL:
-        engine.battery.update(1, event.price)
+        engine.battery.update(BatteryAction.CHARGE, event.price)
         print_decision(time_str, event.price, "CHARGE (ADR)", engine.battery.current_charge, engine.total_profit, get_signal_label(signal))
         return True, 1.0
 

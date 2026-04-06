@@ -29,7 +29,7 @@ class RetryPolicy:
             except Exception as e:
                 attempt += 1
                 if attempt >= self.max_attempts:
-                    logger.error(f"All {self.max_attempts} attempts failed — giving up")
+                    logger.error(f"All {self.max_attempts} attempts failed - giving up")
                     raise e
 
                 delay = min(self.base_delay * (2 ** attempt), self.max_delay)

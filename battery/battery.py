@@ -1,4 +1,5 @@
-from constants import BATTERY_CAPACITY_KWH, MAX_POWER_KW, EFFICIENCY, MIN_SOC_KWH, MAX_SOC_KWH
+from battery.actions import BatteryAction
+from battery.constants import BATTERY_CAPACITY_KWH, MAX_POWER_KW, EFFICIENCY, MIN_SOC_KWH, MAX_SOC_KWH
 
 class Battery:
     """Represents the battery unit and executes the charge/discharge logic."""
@@ -11,7 +12,7 @@ class Battery:
         discharge_rate: multiplier on max discharge power (1.0 = full, 0.5 = half)
         """
 
-        if action == 1:  # CHARGING
+        if action == BatteryAction.CHARGE:
             possible_charge = min(MAX_POWER_KW, MAX_SOC_KWH - self.current_charge)
             if possible_charge <= 0:
                 return 0.0
@@ -19,14 +20,14 @@ class Battery:
             cost = possible_charge * price
             return -cost
 
-        elif action == -1:  # DISCHARGING
+        elif action == BatteryAction.DISCHARGE:
             # Apply discharge_rate to limit how much we can discharge
             max_discharge = MAX_POWER_KW * discharge_rate
             possible_discharge = min(max_discharge, self.current_charge - MIN_SOC_KWH)
             if possible_discharge <= 0:
                 return 0.0
             self.current_charge -= possible_discharge
-            # Note: Revenue calculation is simpler here as efficiency was applied during charging
+            # Note: Efficiency is not applied here as round-trip efficiency discount was accounted for already during charging
             revenue = possible_discharge * price
             return revenue
 

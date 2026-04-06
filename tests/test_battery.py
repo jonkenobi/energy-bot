@@ -1,6 +1,7 @@
 import pytest
-from battery import Battery
-from constants import BATTERY_CAPACITY_KWH, MAX_POWER_KW, EFFICIENCY, MIN_SOC_KWH, MAX_SOC_KWH
+from battery.constants import BATTERY_CAPACITY_KWH, PRICE_THRESHOLD, MIN_SOC_KWH, MAX_SOC_KWH, MAX_POWER_KW, EFFICIENCY
+from battery.battery import Battery
+from battery.actions import BatteryAction
 from arbitrage.engine import ArbitrageEngine, Decision
 from adr.models import VenPayload, SimpleLevel
 from datetime import datetime, timedelta
@@ -17,7 +18,7 @@ def test_battery_initialization():
 def test_battery_charge():
     battery = Battery()
     initial_charge = battery.current_charge
-    cost = battery.update(1, 0.10)
+    cost = battery.update(BatteryAction.CHARGE, 0.10)
 
     expected_increase = min(MAX_POWER_KW, MAX_SOC_KWH - initial_charge) * EFFICIENCY
     assert battery.current_charge == pytest.approx(initial_charge + expected_increase)
@@ -27,7 +28,7 @@ def test_battery_discharge():
     battery = Battery()
     battery.current_charge = 5.0
     initial_charge = battery.current_charge
-    revenue = battery.update(-1, 0.20)
+    revenue = battery.update(BatteryAction.DISCHARGE, 0.20)
 
     expected_decrease = min(MAX_POWER_KW, initial_charge - MIN_SOC_KWH)
     assert battery.current_charge == pytest.approx(initial_charge - expected_decrease)
@@ -76,19 +77,19 @@ def test_engine_waits_at_threshold():
     engine = ArbitrageEngine()
     engine.battery.current_charge = 5.0
     decision = engine.evaluate(0.15)  # at threshold
-    assert decision.action == "WAIT"
+    assert decision.action == "HOLD"
 
 def test_engine_waits_when_battery_full():
     engine = ArbitrageEngine()
     engine.battery.current_charge = MAX_SOC_KWH
     decision = engine.evaluate(0.10)  # low price but battery full
-    assert decision.action == "WAIT"
+    assert decision.action == "HOLD"
 
 def test_engine_waits_when_battery_empty():
     engine = ArbitrageEngine()
     engine.battery.current_charge = MIN_SOC_KWH
     decision = engine.evaluate(0.20)  # high price but battery empty
-    assert decision.action == "WAIT"
+    assert decision.action == "HOLD"
 
 def test_engine_tracks_profit():
     engine = ArbitrageEngine()

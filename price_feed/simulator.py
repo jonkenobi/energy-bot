@@ -36,7 +36,7 @@ async def simulate_price_feed():
             price = await breaker.call(retry.call, fetch_price, hour)
             yield PriceEvent(timestamp=now, price=price, hour=round(hour, 2))
         except Exception as e:
-            logger.warning(f"Skipping tick — {e}")
+            logger.warning(f"Skipping tick - {e}")
 
         await asyncio.sleep(1)
 
