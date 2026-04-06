@@ -56,9 +56,11 @@ async def get_status():
     }
 
 def get_current_signal() -> VenPayload | None:
+    global current_signal
     if current_signal is None:
         return None
     if not current_signal.is_active():
-        logger.debug(f"Event {current_signal.event_id} expired")
+        logger.info(f"Event {current_signal.event_id} expired -clearing signal")
+        current_signal = None
         return None
     return current_signal
