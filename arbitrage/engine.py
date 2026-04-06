@@ -1,12 +1,12 @@
+from constants import BATTERY_CAPACITY_KWH, PRICE_THRESHOLD, MIN_SOC_KWH, MAX_SOC_KWH
+from battery import Battery
 from dataclasses import dataclass
 from datetime import datetime
-from battery import Battery
-from constants import BATTERY_CAPACITY_KWH, PRICE_THRESHOLD
 
 @dataclass
 class Decision:
     timestamp: datetime
-    action: str        # CHARGE, DISCHARGE, WAIT
+    action: str
     price: float
     battery_level: float
     profit: float
@@ -17,10 +17,10 @@ class ArbitrageEngine:
         self.total_profit = 0.0
 
     def evaluate(self, price: float) -> Decision:
-        if price < PRICE_THRESHOLD and self.battery.current_charge < BATTERY_CAPACITY_KWH:
+        if price < PRICE_THRESHOLD and self.battery.current_charge < MAX_SOC_KWH:
             action = 1
             label = "CHARGE"
-        elif price > PRICE_THRESHOLD and self.battery.current_charge > 0:
+        elif price > PRICE_THRESHOLD and self.battery.current_charge > MIN_SOC_KWH:
             action = -1
             label = "DISCHARGE"
         else:
