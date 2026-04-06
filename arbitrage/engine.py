@@ -16,7 +16,7 @@ class ArbitrageEngine:
         self.battery = Battery()
         self.total_profit = 0.0
 
-    def evaluate(self, price: float) -> Decision:
+    def evaluate(self, price: float, discharge_rate: float = 1.0) -> Decision:
         if price < PRICE_THRESHOLD and self.battery.current_charge < MAX_SOC_KWH:
             action = 1
             label = "CHARGE"
@@ -27,7 +27,7 @@ class ArbitrageEngine:
             action = 0
             label = "WAIT"
 
-        money = self.battery.update(action, price)
+        money = self.battery.update(action, price, discharge_rate=discharge_rate)
         self.total_profit += money
 
         return Decision(

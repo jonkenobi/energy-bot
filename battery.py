@@ -5,23 +5,26 @@ class Battery:
     def __init__(self):
         self.current_charge = MIN_SOC_KWH  # Start at minimum safe level
 
-    def update(self, action, price):
-        """Action: +1 (Charge), -1 (Discharge), 0 (Hold). Returns: Profit/Cost ($)"""
+    def update(self, action, price, discharge_rate: float = 1.0):
+        """
+        Action: +1 (Charge), -1 (Discharge), 0 (Hold). Returns: Profit/Cost ($)
+        discharge_rate: multiplier on max discharge power (1.0 = full, 0.5 = half)
+        """
 
         if action == 1:  # CHARGING
-            # Cannot charge beyond 90% SoC
             possible_charge = min(MAX_POWER_KW, MAX_SOC_KWH - self.current_charge)
             if possible_charge <= 0:
-                return 0.0  # Already at max, do nothing
+                return 0.0
             self.current_charge += possible_charge * EFFICIENCY
             cost = possible_charge * price
             return -cost
 
         elif action == -1:  # DISCHARGING
-            # Cannot discharge below 10% SoC
-            possible_discharge = min(MAX_POWER_KW, self.current_charge - MIN_SOC_KWH)
+            # Apply discharge_rate to limit how much we can discharge
+            max_discharge = MAX_POWER_KW * discharge_rate
+            possible_discharge = min(max_discharge, self.current_charge - MIN_SOC_KWH)
             if possible_discharge <= 0:
-                return 0.0  # Already at min, do nothing
+                return 0.0
             self.current_charge -= possible_discharge
             # Note: Revenue calculation is simpler here as efficiency was applied during charging
             revenue = possible_discharge * price
